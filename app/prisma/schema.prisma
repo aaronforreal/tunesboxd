@@ -1,0 +1,184 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  clerkId   String   @unique
+  email     String   @unique
+  username  String?  @unique
+  name      String?
+  imageUrl  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // User's activity
+  reviews   Review[]
+  ratings   Rating[]
+  lists     List[]
+  
+  // Social features
+  following Follow[] @relation("Follower")
+  followers Follow[] @relation("Following")
+
+  @@map("users")
+}
+
+model Follow {
+  id          String @id @default(cuid())
+  followerId  String
+  followingId String
+  createdAt   DateTime @default(now())
+
+  follower  User @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+  following User @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
+  @@map("follows")
+}
+
+model Track {
+  id          String  @id @default(cuid())
+  spotifyId   String  @unique
+  name        String
+  artists     String[] // JSON array of artist names
+  albumName   String?
+  albumId     String?
+  imageUrl    String?
+  previewUrl  String?
+  duration    Int?     // in milliseconds
+  popularity  Int?
+  createdAt   DateTime @default(now())
+
+  reviews Rating[]
+  ratings Review[]
+  listItems ListItem[]
+
+  @@map("tracks")
+}
+
+model Album {
+  id          String   @id @default(cuid())
+  spotifyId   String   @unique
+  name        String
+  artists     String[] // JSON array of artist names
+  imageUrl    String?
+  releaseDate String?
+  totalTracks Int?
+  popularity  Int?
+  createdAt   DateTime @default(now())
+
+  reviews Rating[]
+  ratings Review[]
+  listItems ListItem[]
+
+  @@map("albums")
+}
+
+model Artist {
+  id          String   @id @default(cuid())
+  spotifyId   String   @unique
+  name        String
+  imageUrl    String?
+  genres      String[] // JSON array of genres
+  popularity  Int?
+  followers   Int?
+  createdAt   DateTime @default(now())
+
+  reviews Rating[]
+  ratings Review[]
+  listItems ListItem[]
+
+  @@map("artists")
+}
+
+model Rating {
+  id        String   @id @default(cuid())
+  userId    String
+  rating    Float    // 1-5 stars, allowing half stars
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // One rating can be for a track, album, or artist
+  trackId  String?
+  albumId  String?
+  artistId String?
+  
+  track  Track?  @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  album  Album?  @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  artist Artist? @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, trackId])
+  @@unique([userId, albumId])
+  @@unique([userId, artistId])
+  @@map("ratings")
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  userId    String
+  content   String
+  rating    Float?   // Optional rating with the review
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // One review can be for a track, album, or artist
+  trackId  String?
+  albumId  String?
+  artistId String?
+  
+  track  Track?  @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  album  Album?  @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  artist Artist? @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@map("reviews")
+}
+
+model List {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  description String?
+  isPublic    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user  User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items ListItem[]
+
+  @@map("lists")
+}
+
+model ListItem {
+  id       String @id @default(cuid())
+  listId   String
+  position Int    // For ordering items in the list
+  note     String? // Optional note about this item
+  createdAt DateTime @default(now())
+
+  list List @relation(fields: [listId], references: [id], onDelete: Cascade)
+
+  // One list item can be a track, album, or artist
+  trackId  String?
+  albumId  String?
+  artistId String?
+  
+  track  Track?  @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  album  Album?  @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  artist Artist? @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@unique([listId, position])
+  @@map("list_items")
+}

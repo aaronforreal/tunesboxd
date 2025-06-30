@@ -1,103 +1,112 @@
-import Image from "next/image";
+import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
+      <div className="container mx-auto px-4 py-8">
+        {/* Header */}
+        <header className="flex justify-between items-center mb-12">
+          <div className="flex items-center space-x-2">
+            <div className="w-8 h-8 bg-gradient-to-r from-pink-500 to-violet-500 rounded-lg"></div>
+            <h1 className="text-2xl font-bold text-white">Tunesboxd</h1>
+          </div>
+          
+          <div className="flex items-center space-x-4">
+            <SignedOut>
+              <SignInButton>
+                <button className="bg-white text-purple-900 px-6 py-2 rounded-full font-semibold hover:bg-gray-100 transition-colors">
+                  Sign In
+                </button>
+              </SignInButton>
+            </SignedOut>
+            <SignedIn>
+              <UserButton 
+                appearance={{
+                  elements: {
+                    avatarBox: "w-10 h-10"
+                  }
+                }}
+              />
+            </SignedIn>
+          </div>
+        </header>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        {/* Main Content */}
+        <main className="text-center">
+          <SignedOut>
+            <div className="max-w-4xl mx-auto">
+              <h2 className="text-6xl font-bold text-white mb-6">
+                Track your music.
+                <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-violet-400">
+                  Share your taste.
+                </span>
+              </h2>
+              
+              <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+                Keep track of every song you listen to. Rate and review music. 
+                Create lists and share your musical journey with friends.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <SignInButton>
+                  <button className="bg-gradient-to-r from-pink-500 to-violet-500 text-white px-8 py-3 rounded-full font-semibold text-lg hover:shadow-lg hover:scale-105 transition-all">
+                    Get Started
+                  </button>
+                </SignInButton>
+                
+                <button className="border border-white/20 text-white px-8 py-3 rounded-full font-semibold text-lg hover:bg-white/10 transition-colors">
+                  Learn More
+                </button>
+              </div>
+
+              <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
+                  <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-violet-500 rounded-lg mb-4 mx-auto"></div>
+                  <h3 className="text-xl font-semibold text-white mb-2">Track & Rate</h3>
+                  <p className="text-gray-300">Rate every song and album you listen to on a scale of 1-5 stars.</p>
+                </div>
+                
+                <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
+                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg mb-4 mx-auto"></div>
+                  <h3 className="text-xl font-semibold text-white mb-2">Review & Share</h3>
+                  <p className="text-gray-300">Write detailed reviews and share your thoughts with the community.</p>
+                </div>
+                
+                <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
+                  <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg mb-4 mx-auto"></div>
+                  <h3 className="text-xl font-semibold text-white mb-2">Discover</h3>
+                  <p className="text-gray-300">Find new music through friends' recommendations and curated lists.</p>
+                </div>
+              </div>
+            </div>
+          </SignedOut>
+
+          <SignedIn>
+            <div className="max-w-4xl mx-auto">
+              <h2 className="text-4xl font-bold text-white mb-8">
+                Welcome to Tunesboxd! 🎵
+              </h2>
+              
+              <div className="bg-white/10 backdrop-blur-lg rounded-xl p-8 border border-white/20">
+                <h3 className="text-2xl font-semibold text-white mb-4">Your Music Journey Starts Here</h3>
+                <p className="text-gray-300 mb-6">
+                  Start by searching for music, rating your favorite tracks, or creating your first list.
+                </p>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <button className="bg-gradient-to-r from-pink-500 to-violet-500 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all">
+                    Search Music
+                  </button>
+                  <button className="border border-white/20 text-white px-6 py-3 rounded-lg font-semibold hover:bg-white/10 transition-colors">
+                    Create a List
+                  </button>
+                </div>
+              </div>
+            </div>
+          </SignedIn>
+        </main>
+      </div>
     </div>
   );
 }
